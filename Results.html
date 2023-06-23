@@ -1,0 +1,24 @@
+{{ block title }}
+    Période {{ player.round_number }}. Résultat
+{{ endblock }}
+
+{{ block content }}
+	{{if n_winners == 0}}
+	Il n'y a pas eu d'option gagnante dans cette période.<br><br>
+	{{elif n_winners == 1}} Option gagnante :
+	{{else}} Options gagnantes :<br>
+	{{endif}}
+	{{if n_winners > 0}}
+	{{ for w in winnercolors }}
+	&nbsp;<label style="display:inline-block;width:100px;height:20px;border:1px solid black;background-color:{{w.color}}"></label>
+	{{ if player.treatment == 0 }}&nbsp;<div style="display:inline-block;position:relative;top:-4px">({{w.nvotes}} voix)</div> {{ endif }}
+	<br><br>
+	{{ endfor }}
+	{{endif}}
+	
+    Votre gain pour cette période: {{player.payoff}}<br>
+    Votre gain total: {{participant.payoff}}<br>
+    {{ next_button }}
+{{ endblock }}
+
+

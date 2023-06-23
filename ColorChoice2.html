@@ -1,0 +1,63 @@
+{{ block title }}
+    Période {{ player.round_number }}. Vote ({{tr_text}})
+{{ endblock }}
+{{ block content }}
+<script src="{{ static 'Sortable.min.js'}}"></script>
+<input type=hidden name=classed_colors id=classed_colors value='' />
+
+		<div id="shared-lists" class="row">
+			<h4 class="col-12">Déplacer les couleurs à droite pour voter, en les plaçant dans l'ordre de votre préférence
+			 <small style="display:inline">(la plus préférée en  haut de la liste)</small>
+			</h4>
+			
+			<div id="cchoice2-left" class="list-group col">
+			{{for choice in color_choices}}
+				<div id="div-{{choice.0}}" name="{{choice.0}}" class="list-group-item text-center fs-6 text-nowrap" style="border-color:black;background-color:{{choice.1}}; height:40px;">
+				{{if group.option_att == choice.0}}
+				<small style="background-color:white;cursor:default">option attaquée avec {{group.n_votes_en_plus}} vote{{if group.n_votes_en_plus > 1}}s{{endif}}</small>
+				{{else}}
+				&nbsp;			
+				{{endif}}
+				</div>
+
+			{{endfor}}
+			</div>
+
+			<div id="cchoice2-right" class="list-group col border border-warning" style="height:160px">
+				
+			</div>
+		</div>
+<br>
+    <!-- {{ formfields }} -->
+    {{ next_button }}
+<script>
+var cchoice2Left = document.getElementById('cchoice2-left'),
+	cchoice2Right = document.getElementById('cchoice2-right');
+
+
+// Example 2 - Shared lists
+new Sortable(cchoice2Left, {
+	group: 'shared', // set both lists to same group
+	animation: 150
+});
+
+new Sortable(cchoice2Right, {
+	group: 'shared',
+	animation: 150
+});
+function submitter() {
+	var mylist=[];
+	var elemslist=cchoice2Right.getElementsByTagName("div");
+	for(var i=0; i<=elemslist.length; i++) if(typeof elemslist[i] !== 'undefined'){
+		try{
+			var cid=elemslist[i].getAttribute("name");
+			mylist.push(cid);
+		} catch(err) {console.log(err);}
+	}
+	document.getElementById('classed_colors').value=mylist.join(',');
+	console.log(document.getElementById('classed_colors').value);
+}
+document.forms[0].addEventListener("submit", submitter );
+$('#cchoice2-right').on('DOMSubtreeModified', submitter );
+</script>
+{{ endblock }}
